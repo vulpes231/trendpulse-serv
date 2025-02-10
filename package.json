@@ -1,0 +1,8 @@
+{
+  "name": "trendpulse-server",
+  "module": "index.ts",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "type": "module"
+}
