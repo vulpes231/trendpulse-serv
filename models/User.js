@@ -342,7 +342,9 @@ userSchema.statics.registerUser = async function (userData) {
     newUser.refreshToken = refreshToken;
     await newUser.save();
 
-    return { accessToken, refreshToken };
+    const email = userData.email;
+
+    return { accessToken, refreshToken, email };
   } catch (error) {
     console.error(error);
     throw error;

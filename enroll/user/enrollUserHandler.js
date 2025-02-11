@@ -1,21 +1,78 @@
 const User = require("../../models/User");
 
 const enrollUser = async (req, res) => {
-  const { username, password, email, country, confirmPassword } = req.body;
+  const {
+    firstname,
+    lastname,
+    username,
+    password,
+    email,
+    country,
+    phone,
+    street,
+    state,
+    city,
+    zip,
+    dob,
+    nationality,
+    currency,
+    employment,
+    experience,
+  } = req.body;
   // console.log("req.body", req.body);
-  if (!username || !password || !email || !country || !confirmPassword) {
+  if (
+    !firstname ||
+    !lastname ||
+    !username ||
+    !password ||
+    !email ||
+    !country ||
+    !phone ||
+    !street ||
+    !city ||
+    !state ||
+    !zip ||
+    !dob ||
+    !nationality ||
+    !experience ||
+    !currency ||
+    !employment
+  ) {
     return res.status(400).json({ message: "Invalid user data!" });
   }
   try {
-    const userData = { username, password, email, country, confirmPassword };
-    const { accessToken, refreshToken } = await User.registerUser(userData);
+    const userData = {
+      firstname,
+      lastname,
+      username,
+      password,
+      email,
+      country,
+      phone,
+      street,
+      state,
+      city,
+      zip,
+      dob,
+      nationality,
+      currency,
+      employment,
+      experience,
+    };
+    const { accessToken, refreshToken, email } = await User.registerUser(
+      userData
+    );
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     res
       .status(200)
-      .json({ message: `User ${username} account created!`, accessToken });
+      .json({
+        message: `User ${username} account created!`,
+        accessToken,
+        email,
+      });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
