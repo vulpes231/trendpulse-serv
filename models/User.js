@@ -3,7 +3,7 @@ const { sendMail } = require("../utils/mailer");
 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv");
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
