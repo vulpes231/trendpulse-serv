@@ -2,7 +2,7 @@ const { Schema, default: mongoose } = require("mongoose");
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const adminSchema = new Schema(
