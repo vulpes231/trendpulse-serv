@@ -12,14 +12,14 @@ const enrollUser = async (req, res) => {
     street,
     state,
     city,
-    zip,
+    zipcode,
     dob,
     nationality,
     currency,
     employment,
     experience,
   } = req.body;
-  // console.log("req.body", req.body);
+  console.log("req.body", req.body);
   if (
     !firstname ||
     !lastname ||
@@ -31,7 +31,7 @@ const enrollUser = async (req, res) => {
     !street ||
     !city ||
     !state ||
-    !zip ||
+    !zipcode ||
     !dob ||
     !nationality ||
     !experience ||
@@ -52,7 +52,7 @@ const enrollUser = async (req, res) => {
       street,
       state,
       city,
-      zip,
+      zipcode,
       dob,
       nationality,
       currency,
@@ -66,13 +66,11 @@ const enrollUser = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    res
-      .status(200)
-      .json({
-        message: `User ${username} account created!`,
-        accessToken,
-        email,
-      });
+    res.status(200).json({
+      message: `User ${username} account created!`,
+      accessToken,
+      email,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

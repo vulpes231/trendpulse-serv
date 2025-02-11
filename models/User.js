@@ -67,7 +67,7 @@ const userSchema = new Schema(
       required: true,
       trim: true,
     },
-    zip: {
+    zipcode: {
       type: String,
       trim: true,
       required: true,
@@ -309,7 +309,7 @@ userSchema.statics.registerUser = async function (userData) {
       state: userData.state,
       city: userData.city,
       country: userData.country,
-      zip: userData.zip,
+      zipcode: userData.zipcode,
       dob: userData.dob,
       nationality: userData.nationality,
       currency: userData.currency,
