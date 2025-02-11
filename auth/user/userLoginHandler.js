@@ -20,6 +20,7 @@ const loginUser = async (req, res) => {
       country,
       username,
       isBanned,
+      otp,
     } = await User.loginUser(loginData);
 
     // Set refresh token in HTTP-only cookie
@@ -36,6 +37,7 @@ const loginUser = async (req, res) => {
       country,
       isBanned,
       email,
+      otp,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

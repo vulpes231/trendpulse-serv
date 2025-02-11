@@ -1,3 +1,6 @@
+const { generateOTP } = require("../utils/generateCode");
+const { sendMail } = require("../utils/mailer");
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
@@ -130,6 +133,11 @@ userSchema.statics.loginUser = async function (loginData) {
       throw new Error("Invalid username or password!");
     }
 
+    const subject = "Vestor Login OTP Code";
+    const code = generateOTP();
+    const message = `Your login verification code is ${code}`;
+    await sendMail(loginData.email, subject, message);
+
     // Generate tokens
     const accessToken = jwt.sign(
       { username: user.username, userId: user._id },
@@ -153,6 +161,7 @@ userSchema.statics.loginUser = async function (loginData) {
       country: user.country,
       username: user.username,
       isBanned: user.isBanned,
+      otp: code,
     };
   } catch (error) {
     console.error(error);
