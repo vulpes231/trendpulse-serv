@@ -12,37 +12,100 @@ Wallet = require("./Wallet");
 
 const userSchema = new Schema(
   {
+    firstname: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      trim: true,
+      required: true,
+    },
     username: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      minlength: 3,
+      minlength: 4,
     },
     password: {
       type: String,
+      required: true,
       trim: true,
-      minlength: 3,
+      minlength: 4,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      minlength: 3,
     },
     country: {
       type: String,
       trim: true,
       required: true,
     },
-    firstname: {
+    phone: {
       type: String,
+      required: true,
       trim: true,
     },
-    lastname: {
+
+    street: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    state: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    zip: {
       type: String,
       trim: true,
+      required: true,
+    },
+    family: {
+      type: Boolean,
+      default: false,
+    },
+    dob: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    employment: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    experience: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    nationality: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    currency: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    depositAddress: {
+      type: String,
+    },
+    idNumber: {
+      type: String,
     },
     pin: {
       type: String,
@@ -63,49 +126,9 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    street: {
-      type: String,
-      trim: true,
-    },
-    apt: {
-      type: String,
-      trim: true,
-    },
-    city: {
-      type: String,
-      trim: true,
-    },
-    state: {
-      type: String,
-      trim: true,
-    },
-    zip: {
-      type: String,
-      trim: true,
-    },
-    phone: {
-      type: String,
-    },
-    mailing: {
-      type: String,
-    },
-    tax: {
-      type: String,
-    },
-    idNumber: {
-      type: String,
-    },
-    marital: {
-      type: String,
-    },
-    dob: {
-      type: String,
-    },
-    employment: {
-      type: String,
-    },
-    depositAddress: {
-      type: String,
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -273,17 +296,26 @@ userSchema.statics.registerUser = async function (userData) {
       throw new Error("Email registered!");
     }
 
-    if (userData.password !== userData.confirmPassword) {
-      throw new Error("Passwords do not match!");
-    }
-
     const hashPassword = await bcrypt.hash(userData.password, 10);
 
     const newUser = await User.create({
+      firstname: userData.firstname,
+      lastname: userData.lastname,
       username: userData.username,
       password: hashPassword,
       email: userData.email,
+      phone: userData.phone,
+      street: userData.street,
+      state: userData.state,
+      city: userData.city,
       country: userData.country,
+      zip: userData.zip,
+      dob: userData.dob,
+      nationality: userData.nationality,
+      currency: userData.currency,
+      experience: userData.experience,
+      employment: userData.employment,
+      isProfileComplete: true,
     });
 
     const depositWallet = await Wallet.create({

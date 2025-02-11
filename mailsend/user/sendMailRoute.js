@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const { sendLoginCode } = require("./sendMailHandler");
+const { verifyUserMail } = require("./sendMailHandler");
 const router = Router();
 
-router.route("/").post(sendLoginCode);
+router.route("/").post(verifyUserMail);
 
 module.exports = router;
