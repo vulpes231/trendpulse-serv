@@ -59,9 +59,7 @@ const enrollUser = async (req, res) => {
       employment,
       experience,
     };
-    const { accessToken, refreshToken, email } = await User.registerUser(
-      userData
-    );
+    const { accessToken, refreshToken } = await User.registerUser(userData);
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
