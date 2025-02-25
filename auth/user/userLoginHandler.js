@@ -31,16 +31,19 @@ const loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // Respond with the access token and user data
-    res.status(200).json({
-      accessToken,
+    const userData = {
       username,
-      isProfileComplete,
       country,
       isBanned,
       email,
       otpCode,
       isEmailVerified,
+    };
+
+    // Respond with the access token and user data
+    res.status(200).json({
+      accessToken,
+      userData,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -30,20 +30,12 @@ const userSchema = new Schema(
       trim: true,
       minlength: 3,
     },
-    country: {
-      type: String,
-      trim: true,
-      required: true,
-    },
+
     firstname: {
       type: String,
       trim: true,
     },
     lastname: {
-      type: String,
-      trim: true,
-    },
-    pin: {
       type: String,
       trim: true,
     },
@@ -62,19 +54,15 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    isProfileComplete: {
-      type: Boolean,
-      default: false,
+    phone: {
+      type: String,
     },
-    street: {
+    country: {
       type: String,
       trim: true,
+      required: true,
     },
-    apt: {
-      type: String,
-      trim: true,
-    },
-    city: {
+    address: {
       type: String,
       trim: true,
     },
@@ -82,33 +70,34 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
-    zip: {
+    city: {
       type: String,
       trim: true,
     },
-    phone: {
+    zipcode: {
       type: String,
-    },
-    mailing: {
-      type: String,
-    },
-    tax: {
-      type: String,
-    },
-    idNumber: {
-      type: String,
-    },
-    marital: {
-      type: String,
+      trim: true,
     },
     dob: {
+      type: String,
+    },
+    nationality: {
+      type: String,
+    },
+    currency: {
+      type: String,
+    },
+    experience: {
       type: String,
     },
     employment: {
       type: String,
     },
-    depositAddress: {
+    family: {
       type: String,
+    },
+    depositAddress: {
+      type: Array,
     },
     canWithdraw: {
       type: Boolean,
@@ -143,11 +132,6 @@ userSchema.statics.loginUser = async function (loginData) {
       throw new Error("Invalid username or password!");
     }
 
-    const subject = "Vestor Login OTP Code";
-    const code = generateOTP();
-    const message = `Your login verification code is ${code}`;
-    await sendMail(user.email, subject, message);
-
     // Generate tokens
     const accessToken = jwt.sign(
       { username: user.username, userId: user._id },
@@ -164,10 +148,14 @@ userSchema.statics.loginUser = async function (loginData) {
     user.refreshToken = refreshToken;
     await user.save();
 
+    const subject = "Vestor Login OTP Code";
+    const code = generateOTP();
+    const message = `Your login verification code is ${code}`;
+    await sendMail(user.email, subject, message);
+
     return {
       accessToken,
       refreshToken,
-      isProfileComplete: user.isProfileComplete,
       country: user.country,
       username: user.username,
       isBanned: user.isBanned,
@@ -223,11 +211,11 @@ userSchema.statics.editUser = async function (userId, userData) {
     if (userData.lastname) {
       user.lastname = userData.lastname;
     }
-    if (userData.street) {
-      user.street = userData.street;
+    if (userData.address) {
+      user.address = userData.address;
     }
-    if (userData.apt) {
-      user.apt = userData.apt;
+    if (userData.phone) {
+      user.phone = userData.phone;
     }
     if (userData.city) {
       user.city = userData.city;
@@ -235,20 +223,18 @@ userSchema.statics.editUser = async function (userId, userData) {
     if (userData.state) {
       user.state = userData.state;
     }
-    if (userData.zip) {
-      user.zip = userData.zip;
+    if (userData.zipcode) {
+      user.zipcode = userData.zipcode;
     }
-    if (userData.phone) {
-      user.phone = userData.phone;
+
+    if (userData.nationality) {
+      user.nationality = userData.nationality;
     }
-    if (userData.marital) {
-      user.marital = userData.marital;
+    if (userData.experience) {
+      user.experience = userData.experience;
     }
-    if (userData.tax) {
-      user.tax = userData.tax;
-    }
-    if (userData.dob) {
-      user.dob = userData.dob;
+    if (userData.currency) {
+      user.currency = userData.currency;
     }
     if (userData.mailing) {
       user.mailing = userData.mailing;
@@ -256,10 +242,7 @@ userSchema.statics.editUser = async function (userId, userData) {
     if (userData.employment) {
       user.employment = userData.employment;
     }
-    if (userData.id) {
-      user.idNumber = userData.id;
-    }
-    user.isProfileComplete = true;
+
     await user.save();
     return user;
   } catch (error) {
@@ -291,26 +274,34 @@ userSchema.statics.registerUser = async function (userData) {
     const hashPassword = await bcrypt.hash(userData.password, 10);
 
     const newUser = await User.create({
+      firstname: userData.firstname,
+      lastname: userData.lastname,
       username: userData.username,
       password: hashPassword,
       email: userData.email,
-      country: userData.country,
+      country: userData.country_id,
+      phone: userData.phone,
+      address: userData.address,
+      state: userData.state_id,
+      city: userData.city,
+      zipcode: userData.zipcode,
+      dob: userData.dob,
+      nationality: userData.nationality,
+      currency: userData.currency_id,
+      experience: userData.experience,
+      employment: userData.employment,
+      family: userData.family,
     });
 
     const depositWallet = await Wallet.create({
       ownerId: newUser._id,
-      walletName: "Deposit",
+      walletName: "deposit",
     });
 
     const investWallet = await Wallet.create({
       ownerId: newUser._id,
-      walletName: "Invest",
+      walletName: "invest",
     });
-
-    const subject = "Verify your email address";
-    const code = generateOTP();
-    const message = `Welcome ${newUser.username}, Thank you for joining Vestor Markets. Your email verification code is ${code}`;
-    await sendMail(newUser.email, subject, message);
 
     const accessToken = jwt.sign(
       { username: newUser.username, userId: newUser._id },
@@ -326,7 +317,7 @@ userSchema.statics.registerUser = async function (userData) {
     newUser.refreshToken = refreshToken;
     await newUser.save();
 
-    return { accessToken, refreshToken, code };
+    return { accessToken, refreshToken };
   } catch (error) {
     console.error(error);
     throw error;

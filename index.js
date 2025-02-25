@@ -38,7 +38,7 @@ app.use("/ticket", require("./ticket/user/ticketRoute"));
 app.use("/trnx", require("./transactions/user/trnxRoute"));
 app.use("/pool", require("./invest/user/investRoute"));
 app.use("/trade", require("./trades/user/tradeRoute"));
-app.use("/otp", require("./mailsend/user/sendMailRoute"));
+app.use("/verifyemail", require("./mailsend/user/sendMailRoute"));
 app.use(
   "/verify",
   upload.single("image"),

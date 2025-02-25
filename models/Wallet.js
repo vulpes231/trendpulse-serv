@@ -12,6 +12,10 @@ const walletSchema = new Schema({
     type: Number,
     default: 0,
   },
+  profitLoss: {
+    type: Number,
+    default: 0,
+  },
   currency: {
     type: String,
     default: "USD",
