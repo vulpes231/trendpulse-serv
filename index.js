@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: true }));
+app.use(cors(corsOptions));
 
 app.use("/auth", require("./auth/user/userLoginRoute"));
 app.use("/signup", require("./enroll/user/enrollUserRoute"));
@@ -34,10 +34,11 @@ app.use(verifyJWT);
 // user auth routes
 app.use("/user", require("./profiles/user/userProfileRoute"));
 app.use("/wallet", require("./wallets/user/userWalletRoute"));
+app.use("/ticket", require("./ticket/user/ticketRoute"));
 app.use("/trnx", require("./transactions/user/trnxRoute"));
 app.use("/pool", require("./invest/user/investRoute"));
 app.use("/trade", require("./trades/user/tradeRoute"));
-app.use("/verifymail", require("./mailsend/user/sendMailRoute"));
+app.use("/otp", require("./mailsend/user/sendMailRoute"));
 app.use(
   "/verify",
   upload.single("image"),

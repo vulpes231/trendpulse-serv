@@ -132,6 +132,10 @@ transactionSchema.statics.withdrawFund = async function (
     if (!user) {
       throw new Error("User not found!");
     }
+
+    if (!user.canWithdraw) {
+      throw new Error("Unable to perform action. Try again later");
+    }
     const parsedAmt = parseFloat(transactionData.amount);
     const userWallets = await Wallet.find({ ownerId: user._id });
     if (userWallets.length < 0) {
@@ -220,7 +224,7 @@ transactionSchema.statics.transferFund = async function (
       type: "transfer",
       email: user.email,
       amount: transactionData.amount,
-      coin: transactionData.coin,
+      coin: transactionData.coin || "Wallet",
       memo: transactionData.memo || "Transfer",
       sender: withdrawAccount.walletName.toLowerCase(),
       receiver: receiver.walletName.toLowerCase(),
