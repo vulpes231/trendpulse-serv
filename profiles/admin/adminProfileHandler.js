@@ -58,17 +58,44 @@ const adminGetUser = async (req, res) => {
 };
 
 const setUserDepositAddress = async (req, res) => {
-  const { walletAddress, userId } = req.body;
-  if (!walletAddress || !userId)
+  const { walletAddress, userId, coin, network } = req.body;
+  if (!walletAddress || !userId || !coin || !network)
     return res.status(400).json({ message: "All fields required!" });
+
   try {
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "user not found!" });
+    if (!user) return res.status(404).json({ message: "User not found!" });
 
-    user.depositAddress = walletAddress;
-    user.save();
+    // Find the deposit address by coin type
+    const walletToUpdate = user.depositAddress.find(
+      (address) => address.coin === coin
+    );
+
+    // Check if wallet address already exists
+    if (walletToUpdate) {
+      // Address exists, update it
+      walletToUpdate.address = walletAddress;
+      walletToUpdate.network = network; // If you need to update the network as well
+    } else {
+      // Address doesn't exist, create a new one
+      const newAddress = {
+        walletId: user._id,
+        coin: coin,
+        address: walletAddress,
+        network: network,
+      };
+      user.depositAddress.push(newAddress);
+    }
+
+    // Mark the depositAddress array as modified (if needed)
+    user.markModified("depositAddress");
+
+    // Save the user object with updated deposit address
+    await user.save();
+
     return res.status(200).json({ message: "Wallet updated." });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ error: error.message });
   }
 };
