@@ -54,6 +54,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    twoFactor: {
+      type: Boolean,
+      default: false,
+    },
     phone: {
       type: String,
     },
@@ -148,10 +152,13 @@ userSchema.statics.loginUser = async function (loginData) {
     user.refreshToken = refreshToken;
     await user.save();
 
-    const subject = "Vestor Login OTP Code";
-    const code = generateOTP();
-    const message = `Your login verification code is ${code}`;
-    await sendMail(user.email, subject, message);
+    let code;
+    if (user.twoFactor) {
+      const subject = "Vestor Login OTP Code";
+      code = generateOTP();
+      const message = `Your login verification code is ${code}`;
+      await sendMail(user.email, subject, message);
+    }
 
     return {
       accessToken,
@@ -159,7 +166,7 @@ userSchema.statics.loginUser = async function (loginData) {
       country: user.country,
       username: user.username,
       isBanned: user.isBanned,
-      otpCode: code,
+      otpCode: code || "",
       isEmailVerified: user.isEmailVerified,
     };
   } catch (error) {
@@ -236,9 +243,7 @@ userSchema.statics.editUser = async function (userId, userData) {
     if (userData.currency) {
       user.currency = userData.currency;
     }
-    if (userData.mailing) {
-      user.mailing = userData.mailing;
-    }
+
     if (userData.employment) {
       user.employment = userData.employment;
     }

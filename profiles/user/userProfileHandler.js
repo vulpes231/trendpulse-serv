@@ -48,18 +48,15 @@ const updateUser = async (req, res) => {
     const userData = {
       firstname,
       lastname,
-      street,
-      apt,
-      city,
+      address,
       state,
-      zip,
-      phone,
-      dob,
+      city,
+      zipcode,
       employment,
-      tax,
-      mailing,
-      marital,
-      id,
+      experience,
+      nationality,
+      currency,
+      phone,
     };
     await User.editUser(userId, userData);
     res.status(200).json({ message: `Profile updated.` });
@@ -103,6 +100,7 @@ const updateEmail = async (req, res) => {
   if (!email) res.status(400).json({ message: "Email required!" });
   try {
     const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found!" });
     user.email = email;
     await user.save();
     res.status(200).json({ message: "Email updated." });

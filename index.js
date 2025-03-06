@@ -22,16 +22,13 @@ app.use(cookieParser());
 
 app.use(cors(corsOptions));
 
+app.use("/", require("./routes/root"));
 app.use("/auth", require("./auth/user/userLoginRoute"));
 app.use("/signup", require("./enroll/user/enrollUserRoute"));
-
-// admin auth
 app.use("/signin", require("./auth/admin/adminAuthRoute"));
 app.use("/enroll", require("./auth/admin/adminEnrollRoute"));
-app.use("/", require("./routes/root"));
 
 app.use(verifyJWT);
-// user auth routes
 app.use("/user", require("./profiles/user/userProfileRoute"));
 app.use("/wallet", require("./wallets/user/userWalletRoute"));
 app.use("/ticket", require("./ticket/user/ticketRoute"));
@@ -45,7 +42,7 @@ app.use(
   require("./verify/user/verifyRoute")
 );
 
-//admin auth routes
+// Admin Routes
 app.use("/managetrnx", require("./transactions/admin/manageTrnxRoute"));
 app.use("/managepool", require("./invest/admin/managePoolRoute"));
 app.use("/managetrade", require("./trades/admin/manageTradeRoute"));

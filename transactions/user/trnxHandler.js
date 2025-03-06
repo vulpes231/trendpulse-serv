@@ -2,13 +2,13 @@ const Transaction = require("../../models/Transaction");
 
 const makeDeposit = async (req, res) => {
   const userId = req.userId;
-  const { amount, coin, memo } = req.body;
-  if (!amount || !coin)
+  const { amount, memo, method } = req.body;
+  if (!amount || !method)
     return res.status(400).json({ message: "Bad request!" });
   try {
     const transactionData = {
       amount,
-      coin,
+      method,
       memo,
     };
     await Transaction.depositFund(transactionData, userId);
@@ -20,13 +20,13 @@ const makeDeposit = async (req, res) => {
 
 const makeWithdrawal = async (req, res) => {
   const userId = req.userId;
-  const { amount, coin, memo, receiver } = req.body;
-  if (!amount || !coin || !receiver)
+  const { amount, method, memo, receiver } = req.body;
+  if (!amount || !method || !receiver)
     return res.status(400).json({ message: "Bad request!" });
   try {
     const transactionData = {
       amount,
-      coin,
+      method,
       memo,
       receiver,
     };

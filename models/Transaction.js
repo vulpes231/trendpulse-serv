@@ -1,7 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const User = require("./User");
 const Wallet = require("./Wallet");
-const { format } = require("date-fns");
 const { sendMail } = require("../utils/mailer");
 
 const Schema = mongoose.Schema;
@@ -22,15 +21,13 @@ const transactionSchema = new Schema(
     amount: {
       type: Number,
     },
-    coin: {
+    method: {
       type: String,
     },
     status: {
       type: String,
     },
-    date: {
-      type: String,
-    },
+
     memo: {
       type: String,
     },
@@ -81,8 +78,7 @@ transactionSchema.statics.createTransaction = async function (
       owner: user._id,
       type: transactionData.type,
       amount: transactionData.amount,
-      coin: transactionData.coin,
-      date: transactionData.date,
+      method: transactionData.method,
       memo: transactionData.memo,
       status: "pending",
     };
@@ -105,16 +101,14 @@ transactionSchema.statics.depositFund = async function (
       throw new Error("User not found!");
     }
 
-    const currentDate = format(new Date(), "EEE d MMM, yyyy");
     const depositTrnx = {
       owner: user._id,
       email: user.email,
       type: "deposit",
       amount: transactionData.amount,
-      coin: transactionData.coin,
-      memo: transactionData.memo || "Funds deposit",
+      method: transactionData.method,
+      memo: transactionData.memo || "Wallet Credit",
       status: "pending",
-      date: currentDate,
     };
     await Transaction.create(depositTrnx);
     return depositTrnx;
@@ -158,18 +152,16 @@ transactionSchema.statics.withdrawFund = async function (
 
     withdrawAccount.balance -= parsedAmt;
     await withdrawAccount.save();
-    const currentDate = format(new Date(), "EEE d MMM, yyyy");
     const newWithdrawal = {
       owner: user._id,
       type: "withdraw",
       email: user.email,
       amount: transactionData.amount,
-      coin: transactionData.coin,
+      method: transactionData.method,
       memo: transactionData.memo || "Withdrawal",
       receiver: transactionData.receiver,
       sender: withdrawAccount.walletName.toLowerCase(),
       status: "pending",
-      date: currentDate,
     };
     await Transaction.create(newWithdrawal);
     console.log("Balance after", withdrawAccount.balance);
@@ -224,8 +216,8 @@ transactionSchema.statics.transferFund = async function (
       type: "transfer",
       email: user.email,
       amount: transactionData.amount,
-      coin: transactionData.coin || "Wallet",
       memo: transactionData.memo || "Transfer",
+      method: "Wallet",
       sender: withdrawAccount.walletName.toLowerCase(),
       receiver: receiver.walletName.toLowerCase(),
       status: "completed",

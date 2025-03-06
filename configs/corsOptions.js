@@ -6,6 +6,7 @@ const corsOptions = {
       // Check for allowed origins (either specific origins or no origin for local testing)
       callback(null, true);
     } else {
+      console.log(origin);
       callback(new Error("Not allowed by CORS"));
     }
   },

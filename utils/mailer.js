@@ -1,9 +1,10 @@
 // mailService.js
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const createTransporter = () => {
   return nodemailer.createTransport({
-    host: "server105.web-hosting.com",
+    host: "server302.web-hosting.com",
     port: 465,
     secure: true,
     auth: {
