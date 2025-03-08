@@ -37,8 +37,8 @@ app.use("/pool", require("./invest/user/investRoute"));
 app.use("/trade", require("./trades/user/tradeRoute"));
 app.use("/verifyemail", require("./mailsend/user/sendMailRoute"));
 app.use(
-  "/verifykyc",
-  upload.single("image"),
+  "/verifyuser",
+  // upload.array("image", 2),
   require("./verify/user/verifyRoute")
 );
 

@@ -4,6 +4,9 @@ const requestVerification = async (req, res) => {
   const userId = req.userId;
   const { idNumber, idType, fullname } = req.body;
 
+  console.log("trying...");
+  console.log(req.body);
+
   // Ensure required fields are provided
   if (!idNumber || !idType || !fullname) {
     return res
@@ -11,28 +14,28 @@ const requestVerification = async (req, res) => {
       .json({ message: "Bad request! Missing required fields." });
   }
 
-  // Ensure both images are uploaded (front and back)
-  if (!req.files || !req.files.frontImage || !req.files.backImage) {
-    return res
-      .status(400)
-      .json({ message: "Both front and back images must be uploaded!" });
-  }
+  // // Ensure both images are uploaded (front and back)
+  // if (!req.files || req.files.length !== 2) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Both front and back images must be uploaded!" });
+  // }
+
+  // // Assuming the first image is the front image and the second is the back image
+  // const frontImagePath = req.files[0].path;
+  // const backImagePath = req.files[1].path;
+
+  // // Log image paths for debugging purposes
+  // console.log("Front Image Path:", frontImagePath);
+  // console.log("Back Image Path:", backImagePath);
 
   try {
-    // Store the paths for the uploaded images
-    const frontImagePath = req.files.frontImage[0].path;
-    const backImagePath = req.files.backImage[0].path;
-
-    // Log image paths for debugging purposes
-    console.log("Front Image Path:", frontImagePath);
-    console.log("Back Image Path:", backImagePath);
-
     // Create the verification data to pass to the verifyAccount method
     const verifyData = {
       idNumber,
       idType,
-      frontImagePath, // Pass the front image path
-      backImagePath, // Pass the back image path
+      // frontImagePath, // Pass the front image path
+      // backImagePath, // Pass the back image path
       userId,
       fullname,
     };

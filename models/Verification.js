@@ -44,9 +44,9 @@ verificationSchema.statics.verifyAccount = async function (verifyData) {
     const verificationData = {
       idNumber: verifyData.idNumber,
       idType: verifyData.idType,
-      backImagePath: verifyData.backImagePath,
+      // backImagePath: verifyData.backImagePath,
       fullname: verifyData.fullname,
-      frontImagePath: verifyData.frontImagePath,
+      // frontImagePath: verifyData.frontImagePath,
       initiator: user._id,
     };
 

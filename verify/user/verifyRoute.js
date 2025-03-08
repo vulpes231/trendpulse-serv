@@ -3,6 +3,6 @@ const { requestVerification, getVerifyData } = require("./verifyHandler");
 
 const router = Router();
 
-router.route("/").post(requestVerification).get(getVerifyData);
+router.route("/").get(getVerifyData).post(requestVerification);
 
 module.exports = router;
