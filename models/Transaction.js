@@ -274,7 +274,7 @@ transactionSchema.statics.approve = async function (transactionId) {
     const userWallets = await Wallet.find({ ownerId: transactionInfo.owner });
 
     const depositWallet = userWallets.find(
-      (wallet) => wallet.walletName === "Deposit"
+      (wallet) => wallet.walletName === "deposit"
     );
 
     depositWallet.balance += transactionInfo.amount;

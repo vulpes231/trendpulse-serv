@@ -3,7 +3,6 @@ const { allowedOrigins } = require("./allowedOrigin");
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      // Check for allowed origins (either specific origins or no origin for local testing)
       callback(null, true);
     } else {
       console.log(origin);
@@ -12,7 +11,7 @@ const corsOptions = {
   },
   credentials: true,
   optionsSuccessStatus: 200,
-  exposedHeaders: ["Access-Control-Allow-Origin"],
+  exposedHeaders: ["Access-Control-Allow-Origin", "Location"], // Add 'Location' for redirects
 };
 
 module.exports = { corsOptions };

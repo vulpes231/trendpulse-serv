@@ -10,13 +10,13 @@ const verificationSchema = new Schema({
     type: String,
     required: true,
   },
-  imagePath: {
+  frontImagePath: {
     type: String,
   },
-  dob: {
+  backImagePath: {
     type: String,
   },
-  employment: {
+  fullname: {
     type: String,
   },
   status: {
@@ -40,12 +40,13 @@ verificationSchema.statics.verifyAccount = async function (verifyData) {
     if (pendingRequest) {
       throw new Error("Request already submitted!");
     }
+
     const verificationData = {
       idNumber: verifyData.idNumber,
       idType: verifyData.idType,
-      imagePath: verifyData.imagePath,
-      dob: verifyData.dob,
-      employment: verifyData.employment,
+      backImagePath: verifyData.backImagePath,
+      fullname: verifyData.fullname,
+      frontImagePath: verifyData.frontImagePath,
       initiator: user._id,
     };
 

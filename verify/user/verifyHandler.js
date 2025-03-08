@@ -1,40 +1,52 @@
 const Verification = require("../../models/Verification");
 
-// The request verification handler
 const requestVerification = async (req, res) => {
   const userId = req.userId;
-  const { idNumber, idType, dob, employment } = req.body;
+  const { idNumber, idType, fullname } = req.body;
 
-  // console.log("req.body:", req.body);
-
-  if (!idNumber || !idType || !dob || !employment) {
-    return res.status(400).json({ message: "Bad request!" });
+  // Ensure required fields are provided
+  if (!idNumber || !idType || !fullname) {
+    return res
+      .status(400)
+      .json({ message: "Bad request! Missing required fields." });
   }
 
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded!" });
+  // Ensure both images are uploaded (front and back)
+  if (!req.files || !req.files.frontImage || !req.files.backImage) {
+    return res
+      .status(400)
+      .json({ message: "Both front and back images must be uploaded!" });
   }
 
   try {
-    const storedImage = req.file.path;
+    // Store the paths for the uploaded images
+    const frontImagePath = req.files.frontImage[0].path;
+    const backImagePath = req.files.backImage[0].path;
 
-    console.log(storedImage);
+    // Log image paths for debugging purposes
+    console.log("Front Image Path:", frontImagePath);
+    console.log("Back Image Path:", backImagePath);
 
+    // Create the verification data to pass to the verifyAccount method
     const verifyData = {
       idNumber,
       idType,
-      imagePath: storedImage,
+      frontImagePath, // Pass the front image path
+      backImagePath, // Pass the back image path
       userId,
-      dob,
-      employment,
+      fullname,
     };
 
+    // Call the static verifyAccount method
     await Verification.verifyAccount(verifyData);
 
+    // Respond with a success message
     return res
       .status(200)
       .json({ message: "Verification request submitted successfully!" });
   } catch (error) {
+    // Handle errors and send a failure response
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
