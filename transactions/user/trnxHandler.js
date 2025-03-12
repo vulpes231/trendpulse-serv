@@ -39,20 +39,20 @@ const makeWithdrawal = async (req, res) => {
 
 const makeTransfer = async (req, res) => {
   const userId = req.userId;
-  const { amount, memo, sender, receiver } = req.body;
-  if (!amount || !sender || !receiver)
+  const { amount, from, comment, to } = req.body;
+  if (!amount || !from || !to)
     return res.status(400).json({ message: "Bad request!" });
   try {
     const transactionData = {
       amount,
-      memo,
-      sender,
-      receiver,
+      comment,
+      from,
+      to,
     };
     await Transaction.transferFund(transactionData, userId);
     res
       .status(200)
-      .json({ message: `${amount} USD transferred to ${receiver}` });
+      .json({ message: `${amount} USD transferred to ${to}` });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

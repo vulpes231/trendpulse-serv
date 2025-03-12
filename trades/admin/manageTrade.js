@@ -4,11 +4,11 @@ const createTrade = async (req, res) => {
   const isAdmin = req.isAdmin;
   if (!isAdmin) return res.status(403).json({ message: "Forbidden access!" });
 
-  const { date, market, amount, roi, userId, botId } = req.body;
-  if (!date || !amount || !market || !userId || !botId)
+  const { date, market, amount, roi, userId, orderType } = req.body;
+  if (!date || !amount || !market || !userId || !orderType)
     return res.status(400).json({ message: "Bad request!" });
   try {
-    const tradeData = { date, market, amount, roi, userId, botId };
+    const tradeData = { date, market, amount, roi, userId, orderType };
     await Trade.createNewTrade(tradeData);
     res.status(200).json({ message: "New position opened." });
   } catch (error) {

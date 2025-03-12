@@ -189,7 +189,7 @@ transactionSchema.statics.transferFund = async function (
     // console.log(userWallets);
 
     const withdrawAccount = userWallets.find(
-      (wallet) => wallet.walletName.toLowerCase() === transactionData.sender
+      (wallet) => wallet.walletName.toLowerCase() === transactionData.from
     );
     if (!withdrawAccount) {
       throw new Error("Invalid from wallet");
@@ -199,7 +199,7 @@ transactionSchema.statics.transferFund = async function (
     }
 
     const receiver = userWallets.find(
-      (wallet) => wallet.walletName.toLowerCase() === transactionData.receiver
+      (wallet) => wallet.walletName.toLowerCase() === transactionData.to
     );
     if (!receiver) {
       throw new Error("Invalid to wallet");
@@ -216,7 +216,7 @@ transactionSchema.statics.transferFund = async function (
       type: "transfer",
       email: user.email,
       amount: transactionData.amount,
-      memo: transactionData.memo || "Transfer",
+      memo: transactionData.comment || "Transfer",
       method: "Wallet",
       sender: withdrawAccount.walletName.toLowerCase(),
       receiver: receiver.walletName.toLowerCase(),

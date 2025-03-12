@@ -4,32 +4,40 @@ const User = require("./User");
 const Bot = require("./Bot");
 const Wallet = require("./Wallet");
 
-const tradeSchema = new Schema({
-  date: {
-    type: String,
+const tradeSchema = new Schema(
+  {
+    date: {
+      type: String,
+    },
+    market: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    roi: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: String,
+    },
+    orderType: {
+      type: String,
+    },
+    // createdBy: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Bot",
+    // },
+    createdFor: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  market: {
-    type: String,
-  },
-  amount: {
-    type: Number,
-  },
-  roi: {
-    type: Number,
-    default: 0,
-  },
-  status: {
-    type: String,
-  },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    ref: "Bot",
-  },
-  createdFor: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 tradeSchema.statics.createNewTrade = async function (tradeData) {
   try {
@@ -38,10 +46,10 @@ tradeSchema.statics.createNewTrade = async function (tradeData) {
       throw new Error("Invalid userId");
     }
 
-    const bot = await Bot.findById(tradeData.botId);
-    if (!bot) {
-      throw new Error("Plan not found!");
-    }
+    // const bot = await Bot.findById(tradeData.botId);
+    // if (!bot) {
+    //   throw new Error("Plan not found!");
+    // }
 
     const userWallets = await Wallet.find({ ownerId: user._id });
     const investWallet = userWallets.find(
@@ -59,13 +67,14 @@ tradeSchema.statics.createNewTrade = async function (tradeData) {
       amount: tradeData.amount,
       roi: tradeData.roi || 0,
       status: "open",
-      createdBy: bot._id,
+      orderType: tradeData.orderType,
       createdFor: user._id,
     };
+
     const newTrade = await Trade.create(newTradeData);
 
-    bot.trades += 1;
-    await bot.save();
+    // bot.trades += 1;
+    // await bot.save();
     return newTrade;
   } catch (error) {
     throw error;

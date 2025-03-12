@@ -45,6 +45,7 @@ app.use(
 // Admin Routes
 app.use("/managetrnx", require("./transactions/admin/manageTrnxRoute"));
 app.use("/managepool", require("./invest/admin/managePoolRoute"));
+app.use("/manageticket", require("./ticket/admin/adminTicketRoute"));
 app.use("/managetrade", require("./trades/admin/manageTradeRoute"));
 app.use("/manageverify", require("./verify/admin/manageVerifyRoute"));
 app.use("/manageadmin", require("./profiles/admin/adminProfileRoute"));
